@@ -34,9 +34,6 @@
     "RiderAndRequestCommonFields": {
       "type": "object",
       "properties": {
-        "user_id": {
-          "type": "string"
-        },
         "from_location": {
           "type": "string"
         },
@@ -57,11 +54,9 @@
         }
       },
       "required": [
-        "user_id",
         "from_location",
         "to_location",
         "start_datetime",
-        "end_datetime",
         "assets_quantity"
       ]
     },
@@ -101,11 +96,26 @@
         }
       ]
     },
+    "Requester_details": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string"
+        },
+        "user_name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "user_id",
+        "user_name"
+      ]
+    },
     "MatchedRequestsDetails": {
       "type": "object",
       "properties": {
-        "accepted_person_details": {
-          "type": "string"
+        "Requester_details": {
+          "$ref": "#/definitions/Requester_details"
         },
         "from_location": {
           "type": "string"
@@ -113,7 +123,11 @@
         "to_location": {
           "type": "string"
         },
-        "date_and_time": {
+        "start_date": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "end_date": {
           "type": "string",
           "format": "datetime"
         },
@@ -147,7 +161,48 @@
             "NOT_APPLIED"
           ]
         }
-      }
+      },
+      "required": [
+        "Requester_details",
+        "from_location",
+        "to_location",
+        "start_date",
+        "end_date",
+        "assets_quantity",
+        "asset_type",
+        "asset_sensitivity",
+        "whom_to_deliver",
+        "applied_status"
+      ]
+    },
+    "MatchedRequestBodyValues": {
+      "type": "object",
+      "properties": {
+        "sort_by": {
+          "type": "string",
+          "enum": [
+            "ASC",
+            "DISC"
+          ]
+        },
+        "filter": {
+          "type": "object",
+          "properties": {
+            "applied_status": {
+              "type": "string",
+              "enum": [
+                "APPLIED",
+                "NOT_APPLIED"
+              ]
+            }
+          },
+          "required": ["applied_status"]
+        }
+      },
+      "required": [
+        "sort_by",
+        "filter"
+      ]
     },
     "DefaultHttpExceptionFields": {
       "type": "object",
@@ -162,27 +217,6 @@
       "required": [
         "response",
         "http_status_code"
-      ]
-    },
-    "CreateAssetTransportRequestBadRequestHttpExceptionFields": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/DefaultHttpExceptionFields"
-        },
-        {
-          "type": "object",
-          "properties": {
-            "res_status": {
-              "type": "string",
-              "enum": [
-                "END_TIME_IS_REQUIRED"
-              ]
-            }
-          },
-          "required": [
-            "res_status"
-          ]
-        }
       ]
     },
     "GetMatchedAssetTransportRequestsBadRequestHttpExceptionFields": {
@@ -228,17 +262,19 @@
       "in": "query",
       "description": "offset query",
       "type": "integer"
+    },
+    "MatchedDetailsBodyParameters": {
+      "name": "Matched_Details",
+      "in": "body",
+      "description": "The Assert Transport Request Matched_Details Body Parameters",
+      "schema": {
+        "$ref": "#/definitions/MatchedRequestBodyValues"
+      }
     }
   },
   "responses": {
     "CreateAssetTransportRequestSuccessResponse": {
       "description": "Success Response"
-    },
-    "CreateAssetTransportRequestBadRequestResponse": {
-      "description": "Bad Request",
-      "schema": {
-        "$ref": "#/definitions/CreateAssetTransportRequestBadRequestHttpExceptionFields"
-      }
     },
     "GetMatchedRequestsDetailsSuccessResponse": {
       "description": "Success Response",
@@ -254,11 +290,11 @@
     }
   },
   "paths": {
-    "/user/request/create/v1/": {
+    "/user/asset_transporataion/request/v1/": {
       "post": {
         "summary": "create asset transport request",
         "description": "Creates a new assert transport request",
-        "operationId": "create_request",
+        "operationId": "create_asset_transport_request",
         "security": [
           {
             "oauth": [
@@ -273,11 +309,8 @@
           }
         ],
         "responses": {
-          "201": {
+          "200": {
             "$ref": "#/responses/CreateAssetTransportRequestSuccessResponse"
-          },
-          "400": {
-            "$ref": "#/responses/CreateAssetTransportRequestBadRequestResponse"
           }
         }
       }
@@ -300,6 +333,9 @@
           },
           {
             "$ref": "#/parameters/OffsetQueryParameter"
+          },
+          {
+            "$ref": "#/parameters/MatchedDetailsBodyParameters"
           }
         ],
         "responses": {

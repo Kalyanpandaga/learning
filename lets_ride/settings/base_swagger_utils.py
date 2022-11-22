@@ -25,6 +25,7 @@ THIRD_PARTY_APPS = []
 APPS = [
     "lr_users",
     "lr_users_auth",
+    "lr_rides"
 ]
 
 INSTALLED_APPS += THIRD_PARTY_APPS
@@ -77,6 +78,7 @@ SWAGGER_UTILS = {
     "APPS": {
         "lr_users": {"dsu_version": "1.0"},
         "lr_users_auth": {"dsu_version": "1.0"},
+        "lr_rides": {"dsu_version": "1.0"}
     },
     "HOST": os.environ.get('APIGATEWAY_ENDPOINT', '127.0.0.1:8000'),
 }
