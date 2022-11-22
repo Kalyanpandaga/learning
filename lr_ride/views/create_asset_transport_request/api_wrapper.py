@@ -40,3 +40,17 @@ def api_wrapper(*args, **kwargs):
             whom_to_deliver=whom_to_deliver
         )
 
+    from lr_ride.storages.asset_transportation_request_storage_implementation import \
+        AssetTransportationRequestStorageImplementation
+    asset_transportation_request_storage = \
+        AssetTransportationRequestStorageImplementation()
+
+    from lr_ride.interactors.create_asset_transfer_request_interactor import \
+        CreateAssetTransferInteractor
+    interactor = CreateAssetTransferInteractor(
+        asset_transportation_request_storage)
+
+    return interactor.create_asset_transportation_request_wrapper(
+        asset_transfer_request_details)
+
+
