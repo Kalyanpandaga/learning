@@ -2,6 +2,7 @@ import uuid
 
 from django.core.exceptions import ValidationError
 from django.db import models
+from ib_common.models import AbstractDateTimeModel
 
 from lr_rides.constants.enums import AssetTypeEnum, AssetSensitivityEnum, \
     AppliedStatusEnum
@@ -24,13 +25,13 @@ def validate_applied_status(value):
         raise ValidationError(INVALID_APPLIED_STATUS.format(value))
 
 
-class AssetTransportationRequest(models.Model):
+class AssetTransportationRequest(models.Model, AbstractDateTimeModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     user_id = models.CharField(max_length=36)
     from_location = models.CharField(max_length=250)
     to_location = models.CharField(max_length=250)
-    start_datetime = models.DateTimeField(null=True)
-    end_datetime = models.DateTimeField()
+    start_datetime = models.DateTimeField()
+    end_datetime = models.DateTimeField(null=True)
     assets_quantity = models.IntegerField()
     asset_type = models.CharField(max_length=25,
                                   validators=[validate_asset_type])
