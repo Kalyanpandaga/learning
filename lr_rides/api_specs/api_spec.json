@@ -1,0 +1,320 @@
+{
+  "swagger": "2.0",
+  "host": "127.0.0.1:8000",
+  "basePath": "/api/fb_post/",
+  "info": {
+    "version": "1.0.0",
+    "title": "Simple API",
+    "description": "A simple API to learn how to write OpenAPI Specification"
+  },
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "securityDefinitions": {
+    "oauth": {
+      "tokenUrl": "http://auth.ibtspl.com/oauth2/",
+      "flow": "password",
+      "scopes": {
+        "read": "read users",
+        "write": "create users",
+        "update": "update users",
+        "delete": "delete users"
+      },
+      "type": "oauth2"
+    }
+  },
+  "security": [],
+  "definitions": {
+    "RiderAndRequestCommonFields": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string"
+        },
+        "from_location": {
+          "type": "string"
+        },
+        "to_location": {
+          "type": "string"
+        },
+        "start_datetime": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "end_datetime": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "assets_quantity": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "required": [
+        "user_id",
+        "from_location",
+        "to_location",
+        "start_datetime",
+        "end_datetime",
+        "assets_quantity"
+      ]
+    },
+    "CreateAssertTransportRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/RiderAndRequestCommonFields"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "asset_type": {
+              "type": "string",
+              "enum": [
+                "LAPTOP",
+                "TRAVEL_BAG",
+                "PACKAGE"
+              ]
+            },
+            "asset_sensitivity": {
+              "type": "string",
+              "enum": [
+                "HIGHLY_SENSITIVE",
+                "SENSITIVE",
+                "NORMAL"
+              ]
+            },
+            "whom_to_deliver": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "asset_type",
+            "asset_sensitivity",
+            "whom_to_deliver"
+          ]
+        }
+      ]
+    },
+    "MatchedRequestsDetails": {
+      "type": "object",
+      "properties": {
+        "accepted_person_details": {
+          "type": "string"
+        },
+        "from_location": {
+          "type": "string"
+        },
+        "to_location": {
+          "type": "string"
+        },
+        "date_and_time": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "assets_quantity": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "asset_type": {
+          "type": "string",
+          "enum": [
+            "LAPTOP",
+            "TRAVEL_BAG",
+            "PACKAGE"
+          ]
+        },
+        "asset_sensitivity": {
+          "type": "string",
+          "enum": [
+            "HIGHLY_SENSITIVE",
+            "SENSITIVE",
+            "NORMAL"
+          ]
+        },
+        "whom_to_deliver": {
+          "type": "string"
+        },
+        "applied_status": {
+          "type": "string",
+          "enum": [
+            "APPLIED",
+            "NOT_APPLIED"
+          ]
+        }
+      }
+    },
+    "DefaultHttpExceptionFields": {
+      "type": "object",
+      "properties": {
+        "response": {
+          "type": "string"
+        },
+        "http_status_code": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "response",
+        "http_status_code"
+      ]
+    },
+    "CreateAssetTransportRequestBadRequestHttpExceptionFields": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/DefaultHttpExceptionFields"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "res_status": {
+              "type": "string",
+              "enum": [
+                "END_TIME_IS_REQUIRED"
+              ]
+            }
+          },
+          "required": [
+            "res_status"
+          ]
+        }
+      ]
+    },
+    "GetMatchedAssetTransportRequestsBadRequestHttpExceptionFields": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/DefaultHttpExceptionFields"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "res_status": {
+              "type": "string",
+              "enum": [
+                "INVALID_LIMIT_VALUE",
+                "INVALID_OFFSET_VALUE"
+              ]
+            }
+          },
+          "required": [
+            "res_status"
+          ]
+        }
+      ]
+    }
+  },
+  "parameters": {
+    "CreateAssetTransportRequestParameter": {
+      "name": "Assert_Transport_Request",
+      "in": "body",
+      "description": "The Assert Transport Request to Create",
+      "schema": {
+        "$ref": "#/definitions/CreateAssertTransportRequest"
+      }
+    },
+    "LimitQueryParameter": {
+      "name": "limit",
+      "in": "query",
+      "description": "limit query",
+      "type": "integer"
+    },
+    "OffsetQueryParameter": {
+      "name": "offset",
+      "in": "query",
+      "description": "offset query",
+      "type": "integer"
+    }
+  },
+  "responses": {
+    "CreateAssetTransportRequestSuccessResponse": {
+      "description": "Success Response"
+    },
+    "CreateAssetTransportRequestBadRequestResponse": {
+      "description": "Bad Request",
+      "schema": {
+        "$ref": "#/definitions/CreateAssetTransportRequestBadRequestHttpExceptionFields"
+      }
+    },
+    "GetMatchedRequestsDetailsSuccessResponse": {
+      "description": "Success Response",
+      "schema": {
+        "$ref": "#/definitions/MatchedRequestsDetails"
+      }
+    },
+    "GetMatchedAssetTransportRequestsBadRequestResponse": {
+      "description": "Bad Request",
+      "schema": {
+        "$ref": "#/definitions/GetMatchedAssetTransportRequestsBadRequestHttpExceptionFields"
+      }
+    }
+  },
+  "paths": {
+    "/user/request/create/v1/": {
+      "post": {
+        "summary": "create asset transport request",
+        "description": "Creates a new assert transport request",
+        "operationId": "create_request",
+        "security": [
+          {
+            "oauth": [
+              "write",
+              "read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/CreateAssetTransportRequestParameter"
+          }
+        ],
+        "responses": {
+          "201": {
+            "$ref": "#/responses/CreateAssetTransportRequestSuccessResponse"
+          },
+          "400": {
+            "$ref": "#/responses/CreateAssetTransportRequestBadRequestResponse"
+          }
+        }
+      }
+    },
+    "/user/matched_requests/v1/": {
+      "get": {
+        "summary": "get matched requests",
+        "description": "get requester asset transport requests matched with rider travel info",
+        "operationId": "get_matched_asset_transport_requests",
+        "security": [
+          {
+            "oauth": [
+              "read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/LimitQueryParameter"
+          },
+          {
+            "$ref": "#/parameters/OffsetQueryParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/GetMatchedRequestsDetailsSuccessResponse"
+          },
+          "400": {
+            "$ref": "#/responses/GetMatchedAssetTransportRequestsBadRequestResponse"
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+    
