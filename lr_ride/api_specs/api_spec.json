@@ -175,7 +175,7 @@
         "applied_status"
       ]
     },
-    "MatchedRequestBodyValues": {
+    "MatchedRequestBodyFields": {
       "type": "object",
       "properties": {
         "sort_by": {
@@ -197,11 +197,24 @@
             }
           },
           "required": ["applied_status"]
+        },
+        "from_location": {
+          "type": "string"
+        },
+        "to_location": {
+          "type": "string"
+        },
+        "datetime": {
+          "type": "string",
+          "format": "datetime"
         }
+
       },
       "required": [
         "sort_by",
-        "filter"
+        "from_location",
+        "to_location",
+        "datetime"
       ]
     },
     "DefaultHttpExceptionFields": {
@@ -268,7 +281,7 @@
       "in": "body",
       "description": "The Assert Transport Request Matched_Details Body Parameters",
       "schema": {
-        "$ref": "#/definitions/MatchedRequestBodyValues"
+        "$ref": "#/definitions/MatchedRequestBodyFields"
       }
     }
   },
@@ -341,9 +354,6 @@
         "responses": {
           "200": {
             "$ref": "#/responses/GetMatchedRequestsDetailsSuccessResponse"
-          },
-          "400": {
-            "$ref": "#/responses/GetMatchedAssetTransportRequestsBadRequestResponse"
           }
         }
       }
