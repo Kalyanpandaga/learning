@@ -5,7 +5,7 @@ from ib_common.date_time_utils.convert_string_to_local_date_time import \
 
 from .validator_class import ValidatorClass
 from ...constants.constants import DEFAULT_DATE_FORMAT
-from ...interactors.interactor_dtos import AssetTransferRequestDetailsDTO
+from ...interactors.interactor_dtos import AssetTransportationRequestDetailsDTO
 
 
 @validate_decorator(validator_class=ValidatorClass)
@@ -28,7 +28,7 @@ def api_wrapper(*args, **kwargs):
             end_datetime, DEFAULT_DATE_FORMAT)
 
     asset_transfer_request_details = \
-        AssetTransferRequestDetailsDTO(
+        AssetTransportationRequestDetailsDTO(
             user_id=user_id,
             from_location=from_location,
             to_location=to_location,
@@ -46,8 +46,8 @@ def api_wrapper(*args, **kwargs):
         AssetTransportationRequestStorageImplementation()
 
     from lr_ride.interactors.create_asset_transfer_request_interactor import \
-        CreateAssetTransferInteractor
-    interactor = CreateAssetTransferInteractor(
+        CreateAssetTransportationInteractor
+    interactor = CreateAssetTransportationInteractor(
         asset_transportation_request_storage)
 
     return interactor.create_asset_transportation_request_wrapper(
