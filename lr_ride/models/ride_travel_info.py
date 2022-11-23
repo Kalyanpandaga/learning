@@ -13,13 +13,13 @@ def validate_travel_medium(value):
         raise ValidationError(INVALID_TRAVEL_MEDIUM.format(value))
 
 
-class RideTravelInfo(models.Model, AbstractDateTimeModel):
+class RideTravelInfo(AbstractDateTimeModel, models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     user_id = models.CharField(max_length=36)
     from_location = models.CharField(max_length=250)
     to_location = models.CharField(max_length=250)
     start_datetime = models.DateTimeField()
-    end_datetime = models.DateTimeField(null=True)
+    end_datetime = models.DateTimeField(null=True, blank=True)
     travel_medium = models.CharField(max_length=20,
                                      validators=[validate_travel_medium])
     assets_quantity = models.IntegerField()

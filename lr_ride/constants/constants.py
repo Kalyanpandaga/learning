@@ -1,1 +1,1 @@
-DEFAULT_DATE_FORMAT = "%Y-%m-%d, %m:%s"
+DEFAULT_DATE_FORMAT = "%Y-%m-%d %H:%M"

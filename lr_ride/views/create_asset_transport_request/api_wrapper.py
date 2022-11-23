@@ -10,12 +10,11 @@ from ...interactors.interactor_dtos import AssetTransportationRequestDetailsDTO
 
 @validate_decorator(validator_class=ValidatorClass)
 def api_wrapper(*args, **kwargs):
-    # user_id = Access the user id
-    user_id = "jkdf_regl_jkdf_regl_jkdf_regl_jkdf_r"
+    user_id = kwargs['user'].user_id
     from_location = kwargs['request_data']['from_location']
     to_location = kwargs['request_data']['to_location']
     start_datetime = kwargs['request_data']['start_datetime']
-    end_datetime = kwargs['end_datetime'].get('end_datetime')
+    end_datetime = kwargs['request_data'].get('end_datetime')
     assets_quantity = kwargs['request_data']['assets_quantity']
     asset_type = kwargs['request_data']['asset_type']
     asset_sensitivity = kwargs['request_data']['asset_sensitivity']
