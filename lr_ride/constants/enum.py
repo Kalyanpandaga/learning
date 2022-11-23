@@ -24,3 +24,8 @@ class TravelMediumEnum(BaseEnumClass, Enum):
     bus = 'BUS',
     car = 'CAR',
     train = 'TRAIN'
+
+
+class OrderEnum(BaseEnumClass, Enum):
+    asc = 'ASC',
+    desc = 'DESC'

@@ -3,6 +3,7 @@ from datetime import datetime
 import pytest
 
 from lr_ride.constants.enum import AppliedStatusEnum
+from lr_ride.interactors.interactor_dtos import MatchedRequestsBodyDetailsDTO
 from lr_ride.models.asset_transportation_request import \
     AssetTransportationRequest
 from lr_ride.storages.asset_transportation_request_storage_implementation import \
@@ -43,6 +44,8 @@ class TestCreateAssetTransportationRequests:
             ).exists()
 
         assert created_asset_transportation_request_is_exists is True
+
+
 
 
 

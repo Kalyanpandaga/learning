@@ -3,6 +3,8 @@ from unittest.mock import create_autospec
 
 import pytest
 
+from lr_ride.interactors.create_asset_transfer_request_interactor import \
+    CreateAssetTransportationInteractor
 from lr_ride.interactors.storage_interfaces.\
     asset_transportation_request_storage_interface import \
     AssetTransportationRequestStorageInterface
@@ -30,8 +32,19 @@ class TestCreateAssetTransportationRequestInteractor:
         asset_transfer_request_details = setup_data
         asset_transfer_request_storage_mock = common_mocks
 
+        interactor = CreateAssetTransportationInteractor(
+            asset_transfer_request_storage_mock)
+
+        interactor.create_asset_transportation_request_wrapper(
+            asset_transfer_request_details)
+
         asset_transfer_request_storage_mock.\
-            create_asset_transportation_request(asset_transfer_request_details)
+            create_asset_transportation_request.assert_called_once_with(
+                asset_transfer_request_details)
+
+
+
+
 
 
 

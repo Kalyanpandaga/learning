@@ -5,7 +5,10 @@ REQUEST_BODY_JSON = """
     "sort_by": "ASC",
     "filter": {
         "applied_status": "APPLIED"
-    }
+    },
+    "from_location": "string",
+    "to_location": "string",
+    "datetime": "string"
 }
 """
 
@@ -25,14 +28,6 @@ RESPONSE_200_JSON = """
     "asset_sensitivity": "HIGHLY_SENSITIVE",
     "whom_to_deliver": "string",
     "applied_status": "APPLIED"
-}
-"""
-
-RESPONSE_400_JSON = """
-{
-    "response": "string",
-    "http_status_code": 1,
-    "res_status": "INVALID_LIMIT_VALUE"
 }
 """
 

@@ -111,7 +111,7 @@
         "user_name"
       ]
     },
-    "MatchedRequestsDetails": {
+    "MatchedRequestDetails": {
       "type": "object",
       "properties": {
         "Requester_details": {
@@ -175,6 +175,12 @@
         "applied_status"
       ]
     },
+    "MatchedRequestsDetails": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/MatchedRequestDetails"
+      }
+    },
     "MatchedRequestBodyFields": {
       "type": "object",
       "properties": {
@@ -182,7 +188,7 @@
           "type": "string",
           "enum": [
             "ASC",
-            "DISC"
+            "DESC"
           ]
         },
         "filter": {
@@ -196,7 +202,9 @@
               ]
             }
           },
-          "required": ["applied_status"]
+          "required": [
+            "applied_status"
+          ]
         },
         "from_location": {
           "type": "string"
@@ -208,7 +216,6 @@
           "type": "string",
           "format": "datetime"
         }
-
       },
       "required": [
         "sort_by",

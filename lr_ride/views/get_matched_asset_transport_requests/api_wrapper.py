@@ -1,48 +1,52 @@
 from django_swagger_utils.drf_server.utils.decorator.interface_decorator \
     import validate_decorator
+from ib_common.date_time_utils.convert_string_to_local_date_time import \
+    convert_string_to_local_date_time
+
 from .validator_class import ValidatorClass
+from ...constants.constants import DEFAULT_DATE_FORMAT
+from ...interactors.interactor_dtos import MatchedRequestsBodyDetailsDTO, \
+    FilterByDTO
+from ...presenters.get_matched_asset_transportation_request_presenter_implementation import \
+    GetMatchedAssetTransportationRequestPresenterImplementation
 
 
 @validate_decorator(validator_class=ValidatorClass)
 def api_wrapper(*args, **kwargs):
-    # ---------MOCK IMPLEMENTATION---------
+    user_id = kwargs['user'].user_id
+    sort_by = kwargs['request_data']['sort_by']
+    filter_by = kwargs['request_data'].get('filter')
+    from_location = kwargs['request_data']['from_location']
+    to_location = kwargs['request_data']['to_location']
+    datetime = kwargs['request_data']['start_datetime']
 
-    try:
-        from lr_ride.views.get_matched_asset_transport_requests.request_response_mocks \
-            import REQUEST_BODY_JSON
-        body = REQUEST_BODY_JSON
-    except ImportError:
-        body = {}
+    datetime = convert_string_to_local_date_time(datetime,
+                                                 DEFAULT_DATE_FORMAT)
+    if filter_by is not None:
+        filter_by_dto = FilterByDTO(applied_status=filter_by.applied_status)
+    else:
+        filter_by_dto = None
+    matched_requests_body_details = \
+        MatchedRequestsBodyDetailsDTO(
+            user_id=user_id,
+            sort_by=sort_by,
+            filter=filter_by_dto,
+            from_location=from_location,
+            to_location=to_location,
+            datetime=datetime,
+        )
 
-    test_case = {
-        "path_params": {},
-        "query_params": {'limit': 890, 'offset': 233},
-        "header_params": {},
-        "body": body,
-        "securities": [{'oauth': ['read']}]
-    }
+    from lr_ride.storages.asset_transportation_request_storage_implementation\
+        import AssetTransportationRequestStorageImplementation
+    asset_transportation_request_storage = \
+        AssetTransportationRequestStorageImplementation()
 
-    from django_swagger_utils.drf_server.utils.server_gen.mock_response \
-        import mock_response
-    try:
-        response = ''
-        status_code = 200
-        if '200' in ['200', '400']:
-            from lr_ride.views.get_matched_asset_transport_requests.request_response_mocks \
-                import RESPONSE_200_JSON
-            response = RESPONSE_200_JSON
-            status_code = 200
-        elif '201' in ['200', '400']:
-            from lr_ride.views.get_matched_asset_transport_requests.request_response_mocks \
-                import RESPONSE_201_JSON
-            response = RESPONSE_201_JSON
-            status_code = 201
-    except ImportError:
-        response = ''
-        status_code = 200
-    response_tuple = mock_response(
-        app_name="lr_ride", test_case=test_case,
-        operation_name="get_matched_asset_transport_requests",
-        kwargs=kwargs, default_response_body=response,
-        group_name="", status_code=status_code)
-    return response_tuple
+    from lr_ride.interactors.get_matched_asset_transfer_request_interactor \
+        import GetMatchedAssetTransportationInteractor
+    interactor = GetMatchedAssetTransportationInteractor(
+        asset_transportation_request_storage)
+
+    presenter = GetMatchedAssetTransportationRequestPresenterImplementation()
+
+    return interactor.get_matched_asset_transportation_request_wrapper(
+        matched_requests_body_details, presenter)
