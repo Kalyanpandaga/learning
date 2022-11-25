@@ -13,6 +13,9 @@ class CreateAssetTransportationInteractor:
 
     def create_asset_transportation_request_wrapper(
             self, asset_transfer_request_details):
+        """
+        remove
+        """
 
         self.create_asset_transportation_request(asset_transfer_request_details)
 
